@@ -1,26 +1,42 @@
 import React from 'react';
 import * as htmlToImage from 'html-to-image';
+import {toBlob} from "html-to-image";
 
 type Props = {
 };
 export const App: React.FC<Props> = () => {
     const divRef: React.MutableRefObject<HTMLDivElement | null> = React.useRef(null);
 
+    // setTimeout(() => {
+    //     if (divRef !== null) {
+    //         const current = divRef.current;
+    //         if (current !== null) {
+    //         htmlToImage.toPng(current, {cacheBust: true,})
+    //             .then((dataUrl) => {
+    //                 const link = document.createElement('a')
+    //                 link.download = 'my-image-name.png'
+    //                 link.href = dataUrl
+    //                 link.click()
+    //             })
+    //             .catch((err) => {
+    //                 console.log(err)
+    //             })
+    //     }}
+    // }, 1000);
+
+
     setTimeout(() => {
-        if (divRef !== null) {
-            const current = divRef.current;
-            if (current !== null) {
-            htmlToImage.toPng(current, {cacheBust: true,})
-                .then((dataUrl) => {
-                    const link = document.createElement('a')
-                    link.download = 'my-image-name.png'
-                    link.href = dataUrl
-                    link.click()
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        }}
+        const current = divRef.current;
+        if (current !== null) {
+            toBlob(current)
+                .then(function (blob) {
+                    const link = document.createElement('a');
+                    const url = window.URL.createObjectURL(blob as Blob);
+                    link.href = url;
+                    link.download = `someIntrestingName.png`;
+                    link.click();
+                });
+        }
     }, 1000);
 
     return (
